@@ -1,0 +1,64 @@
+# Fossify Calendar for iOS. Build with `idl build -c release` (see README.md).
+toolchain:
+  sdk_bundle: ~/.swiftpm/swift-sdks/darwin.artifactbundle
+  swiftly_bin: ~/.local/share/swiftly/bin
+  swiftc: swiftc
+  ldid: ldid
+  actool: idl-actool
+
+targets:
+  - name: FossifyCalendar
+    bundle_id: org.fossify.calendar.ios
+    version: "1.12.2"
+    build_number: "1"
+    min_ios: "17.0"
+    device_family: "1,2"
+    link: [CalendarKit, FossifyCommons]
+    sources: [App]
+    resources: [Resources/Assets.xcassets, Resources/Holidays.bundle]
+    frameworks: [SwiftUI, UIKit, Foundation, EventKit, Contacts, UserNotifications]
+    swift_version: "5.0"
+    info:
+      CFBundleDisplayName: Calendar
+      NSCalendarsFullAccessUsageDescription: Calendar needs access to your calendars to show and edit the events of synced calendars.
+      NSCalendarsUsageDescription: Calendar needs access to your calendars to show and edit the events of synced calendars.
+      NSContactsUsageDescription: Calendar needs access to your contacts to add their birthdays and anniversaries.
+      UIFileSharingEnabled: true
+      LSSupportsOpeningDocumentsInPlace: true
+      UIApplicationSceneManifest:
+        UIApplicationSupportsMultipleScenes: false
+      UISupportedInterfaceOrientations:
+        - UIInterfaceOrientationPortrait
+        - UIInterfaceOrientationLandscapeLeft
+        - UIInterfaceOrientationLandscapeRight
+      UISupportedInterfaceOrientations~ipad:
+        - UIInterfaceOrientationPortrait
+        - UIInterfaceOrientationPortraitUpsideDown
+        - UIInterfaceOrientationLandscapeLeft
+        - UIInterfaceOrientationLandscapeRight
+      CFBundleDocumentTypes:
+        - CFBundleTypeName: iCalendar
+          LSHandlerRank: Alternate
+          LSItemContentTypes: [com.apple.ical.ics, public.calendar-event]
+    configurations:
+      debug:
+        entitlements:
+          get-task-allow: true
+
+  # Everything but the app entry point; also linked by the launcher (fossify-ios/launcher-ios).
+  - name: CalendarKit
+    type: static
+    min_ios: "17.0"
+    link: [FossifyCommons]
+    sources: [Sources]
+    frameworks: [SwiftUI, UIKit, Foundation, EventKit, Contacts, UserNotifications]
+    swift_version: "5.0"
+
+  # Shared core (fossify-ios/commons-ios), compiled into the app as a static Swift module.
+  - name: FossifyCommons
+    type: static
+    dir: ../commons-ios
+    min_ios: "17.0"
+    sources: [Sources]
+    frameworks: [SwiftUI, UIKit, Foundation]
+    swift_version: "5.0"
