@@ -16,6 +16,9 @@ struct LocalDatabase: Codable {
 @MainActor
 @Observable
 final class CalendarStore {
+    /// One store per process: the app's screens and its home-screen widgets (in launcher-ios) share it.
+    static let shared = CalendarStore()
+
     private(set) var db = LocalDatabase()
     /// Bumped on every change so pages refetch.
     private(set) var revision = 0

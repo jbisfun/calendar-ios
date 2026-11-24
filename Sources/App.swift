@@ -42,7 +42,7 @@ final class Router {
 /// The whole app as one view: the standalone app's window content, and what the launcher
 /// presents. `importURL` is an .ics file handed over by the launcher.
 public struct CalendarRoot: View {
-    @State private var store = CalendarStore()
+    @State private var store = CalendarStore.shared
     @State private var router = Router()
     private let importURL: URL?
 
